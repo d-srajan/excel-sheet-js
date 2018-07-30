@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<style type="text/css">
+		 table{
+		    border: 1px solid black;
+		    table-layout: fixed;
+		    width: 200px;
+		}
+
+		th, td {
+		    border: 1px solid black;
+		    width: 100px;
+		    overflow: hidden;
+    		text-overflow: ellipsis;
+    		white-space: nowrap;
+		}	
+	</style>
+</head>
+<body>
+	<div>
+		<ul>
+			<li>Add Column &nbsp;<input type="number" name="" id="column"></li>
+			<li>Add Row &nbsp;<input type="number" name="" id="row"></li>
+			<li><button id="createTableBtn">Create Table</button></li>
+		</ul>
+		<div id="tableId"></div>
+		<ul>
+			<li>Delete Column Number &nbsp;<input type="number" name="" id="delColumn"></li>
+			<li><button id="delColumnBtn">Delete Column</button></li>
+			<li>Delete Row Number &nbsp;<input type="number" name="" id="delRow"></li>
+			<li><button id="delRowBtn">Delete Row</button></li>
+		</ul>
+	</div>
+<script type="text/javascript">
+	var tableEle = document.getElementById("tableId");
+	var ColumnNo = document.getElementById("column");
+	var RowNo = document.getElementById("row");
+	var createBtn = document.getElementById("createTableBtn");
+	var delRowBtn = document.getElementById("delRowBtn");
+	var delColBtn = document.getElementById("delColumnBtn");
+	var delRowNo = document.getElementById("delRow");
+	var delColNo = document.getElementById("delColumn");
+
+	createBtn.addEventListener("click", generateTable)
+	delRowBtn.addEventListener("click", deleteRow);
+	delColBtn.addEventListener("click", deleteColumn);
+
+	function generateTable(e){
+		var newTable = document.createElement("table"),
+		tBody = newTable.createTBody();
+		newTable.setAttribute("id", "myTable");
+        var nOfColumns = parseInt(ColumnNo.value, 10);
+        var nOfRows = parseInt(RowNo.value, 10);
+        //console.log(newTable + tBody + nOfColumns + nOfRows);
+
+        var row = generateRowEle(nOfColumns);
+        //console.log(row);
+        for (var i = 0; i < nOfRows; i++) {
+            tBody.appendChild(row.cloneNode(true));
+        }
+
+        if(tableEle.hasChildNodes()){
+        	tableEle.replaceChild.call(tableEle, newTable, tableEle.children[0]);
+        }else{
+        	tableEle.appendChild.call(tableEle, newTable, tableEle.children[0]);
+        }
+	}
+
+	function generateRowEle(c){
+		var row = document.createElement("tr");
+		var divEdit = document.createElement("div");
+		divEdit.innerHTML = 'cell';
+		divEdit.contentEditable = true;
+		for (var i = 0; i < c; i++) {
+			row.insertCell().appendChild(divEdit.cloneNode(true)); //.appendChild(text.cloneNode(true));
+		}
+		return row; //row.cloneNode(true)
+	}
+
+	function deleteRow(e){
+		document.getElementById('myTable').deleteRow(parseInt(delRowNo.value, 10)-1); 
+	}
+
+	function deleteColumn(e){
+		var tableBody = document.getElementById('myTable').firstChild;
+
+		for (var i = 0; i < tableBody.childNodes.length; i++) {
+			//console.log(delColNo + " column deleted")
+			tableBody.childNodes[i].deleteCell(parseInt(delColNo.value, 10)-1);
+		}
+	}
+</script>
+</body>
+</html>
